@@ -44,25 +44,25 @@ typedef struct file {
 /* Helper function for thread creation. */
 void* operate_file(void* arg) {
 
-	file_t file_system = *((file_t* )arg);
+    file_t file_system = *((file_t* )arg);
     printf("MAIN THREAD: Assigned \'%s\' to child thread %u.\n",file_system.filename, (unsigned int)pthread_self());
 
-	FILE* file = NULL;
+    FILE* file = NULL;
 
-	file = fopen(file_system.filename, "r");
+    file = fopen(file_system.filename, "r");
     if (file == NULL) {
         perror("Failed to open the file!\n");
         return NULL;
     } 
 
-	char* temp = (char*) calloc (MAX_wordlength, sizeof(char));
+    char* temp = (char*) calloc (MAX_wordlength, sizeof(char));
     if (temp == NULL) {
         perror("Calloc for temp failed.");
         return NULL;
     }
     word_t word_system;
 
-	while (fscanf(file, "%s", temp) == 1) { /* Scanning each word one by one */
+    while (fscanf(file, "%s", temp) == 1) { /* Scanning each word one by one */
     	word_system.word = (char*) calloc (strlen(temp) + 1, sizeof(char));
         if (word_system.word == NULL) {
             perror("Calloc failed.");
@@ -94,12 +94,12 @@ void* operate_file(void* arg) {
   
         *(file_system.index) += 1;
     	pthread_mutex_unlock( &mutex );
-	}
+    }
     
     free(temp);
     free(arg);
     fclose(file);
-	return NULL;
+    return NULL;
 }
 
 /* 
@@ -108,18 +108,18 @@ void* operate_file(void* arg) {
   return 0 otherwise
 */
 int has_txt_extension(char const* name) {
-	size_t len = strlen(name);
-	if (len > 4 && strcmp(name + len - 4, ".txt") == 0) return 1;
-	else return 0;
+    size_t len = strlen(name);
+    if (len > 4 && strcmp(name + len - 4, ".txt") == 0) return 1;
+    else return 0;
 }
 
 int main (int argc, char* argv[]) {
     
-	if (argc != 3) {
-		perror("Invalid arguments");
+    if (argc != 3) {
+	perror("Invalid arguments");
         perror("USAGE: ./a.out <directory> <substring>");
-		return EXIT_FAILURE;
-	}
+	return EXIT_FAILURE;
+    }
 
     /* open the given directory */
     DIR* dir = opendir(argv[1]);
@@ -134,7 +134,7 @@ int main (int argc, char* argv[]) {
     	perror("Calloc for Array failed.");
     	return EXIT_FAILURE;
     }
-	printf("MAIN THREAD: Allocated initial array of 16 character pointers.\n");
+    printf("MAIN THREAD: Allocated initial array of 16 character pointers.\n");
     
     pthread_t tid[100]; /* # of txt files */
     struct dirent* file;
